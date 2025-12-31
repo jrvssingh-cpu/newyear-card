@@ -176,6 +176,7 @@
         width: 200px; /* smaller */
         max-width: 70%;
         border-radius: 22px;
+        max-height: 52vh;
         box-shadow: 0 18px 40px rgba(255, 111, 145, 0.35);
         margin-bottom: 14px;
       }
@@ -220,6 +221,12 @@
           opacity: 1;
           transform: scale(1);
         }
+      }
+
+      /* 📱 Fix for last section on small devices */
+      section:last-of-type {
+        justify-content: flex-start;
+        padding-top: 40px;
       }
     </style>
   </head>
