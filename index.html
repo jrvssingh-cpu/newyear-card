@@ -291,7 +291,7 @@
     <!-- 🎆 Crackers Intro -->
     <div id="intro">
       <canvas id="crackers"></canvas>
-      <div class="intro-text">✨ Happy New Year ✨</div>
+      <div class="intro-text">✨ Happy New Year My Love ✨</div>
     </div>
 
     <!-- PARTICLES -->
@@ -484,6 +484,13 @@
       setTimeout(() => {
         document.getElementById('intro').classList.add('fade-out');
       }, 2200);
+
+      // ⏳ Delay before showing first page (sparkle effect time)
+      const INITIAL_DELAY = 2500; // 2.5 seconds (increase if you want)
+
+      setTimeout(() => {
+        pages[0].classList.add('active');
+      }, INITIAL_DELAY);
     </script>
   </body>
 </html>
