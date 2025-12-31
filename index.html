@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy New Year ❤️</title>
 
-    <!-- Google Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
       rel="stylesheet"
@@ -19,21 +18,22 @@
         font-family: 'Nunito', sans-serif;
       }
 
-      html {
-        scroll-behavior: smooth;
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden; /* 🔒 NO SCROLL */
       }
 
+      /* 🌸 BACKGROUND */
       body {
-        background: linear-gradient(135deg, #fff1f6, #fce7f3, #e0f2fe);
+        background: linear-gradient(135deg, #fff1f6, #fce7f3, #fde2ea, #e8f2ff);
         background-size: 400% 400%;
-        animation: gradientShift 12s ease infinite;
-        color: #444;
-        overflow-x: hidden;
+        animation: gradient 14s ease infinite;
         position: relative;
       }
 
-      /* Animated pastel background */
-      @keyframes gradientShift {
+      @keyframes gradient {
         0% {
           background-position: 0% 50%;
         }
@@ -45,159 +45,324 @@
         }
       }
 
-      .floating {
+      /* 💖 PARTICLES */
+      .particles {
         position: fixed;
-        top: -10%;
-        font-size: 18px;
-        opacity: 0.6;
-        animation: floatDown linear infinite;
+        inset: 0;
         pointer-events: none;
       }
 
-      @keyframes floatDown {
+      .behind {
+        z-index: 1;
+        opacity: 0.7;
+      }
+      .front {
+        z-index: 5;
+        opacity: 0.9;
+      }
+
+      .particle {
+        position: absolute;
+        bottom: -10%;
+        animation: float linear infinite;
+        text-shadow: 0 0 8px rgba(255, 120, 160, 0.8);
+      }
+
+      @keyframes float {
         0% {
-          transform: translateY(0) scale(0.8);
+          transform: translateY(0);
           opacity: 0;
         }
         10% {
-          opacity: 0.8;
+          opacity: 1;
         }
         100% {
-          transform: translateY(120vh) scale(1.2);
+          transform: translateY(-120vh);
           opacity: 0;
         }
       }
 
+      /* 📄 SECTIONS */
       section {
-        min-height: 100vh;
-        padding: 40px 20px;
-        display: flex;
+        position: absolute;
+        inset: 0;
+        display: none;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
+        padding: 20px;
+        z-index: 3;
+
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.55); /* 🔆 LIGHTER */
+        border-radius: 0;
       }
 
+      section.active {
+        display: flex;
+      }
+
+      /* TEXT */
       h1 {
-        font-size: 2.5rem;
-        margin-bottom: 15px;
-        color: #ff6f91;
+        font-size: 2.3rem;
+        color: #ff5f8a;
+        margin-bottom: 12px;
       }
 
       p {
-        font-size: 1.2rem;
-        max-width: 600px;
-        margin-bottom: 25px;
+        font-size: 1.1rem;
+        max-width: 320px;
+        margin-bottom: 20px;
         line-height: 1.6;
+        color: #444;
       }
 
       img {
-        width: 250px;
+        width: 220px;
         max-width: 80%;
-        margin: 20px 0;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
       }
 
+      /* 🔘 BUTTON */
       .btn {
-        margin-top: 20px;
-        padding: 12px 28px;
-        background: #ff6f91;
+        padding: 14px 34px;
+        border-radius: 40px;
+        background: linear-gradient(135deg, #ff6f91, #ff9ab3);
         color: white;
         text-decoration: none;
-        border-radius: 30px;
         font-weight: bold;
-        transition: transform 0.2s, background 0.2s;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
       }
 
-      .btn:hover {
-        background: #ff4f7a;
-        transform: scale(1.05);
+      /* 💌 SECRET */
+      .secret {
+        display: none;
+        margin-top: 15px;
+        font-size: 1.2rem;
+        color: #ff4f7a;
       }
 
-      /* Soft fade animation */
-      .fade-in {
-        animation: fade 1.2s ease-in-out;
+      /* 💗 Hold-to-reveal styles */
+      .hold-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
-      @keyframes fade {
+      .hold-btn {
+        margin-top: 10px;
+      }
+
+      /* Hidden reveal */
+      .reveal-area {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 1.2s ease;
+        margin-top: 30px;
+        text-align: center;
+      }
+
+      .reveal-area.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .us-photo {
+        width: 200px; /* smaller */
+        max-width: 70%;
+        border-radius: 22px;
+        box-shadow: 0 18px 40px rgba(255, 111, 145, 0.35);
+        margin-bottom: 14px;
+      }
+
+      .reveal-text {
+        font-size: 1.25rem;
+        color: #ff4f7a;
+        line-height: 1.6;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 1.2s ease 0.6s, transform 1.2s ease 0.6s;
+      }
+
+      .reveal-area.show .reveal-text {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      section.active {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* 🌸 Tiny personal photo */
+      .tiny-photo {
+        width: 32px; /* emoji-sized */
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 6px;
+        vertical-align: middle;
+        box-shadow: 0 0 8px rgba(255, 111, 145, 0.6);
+      }
+
+      /* soft entrance */
+      @keyframes fadeInSoft {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: scale(0.8);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: scale(1);
         }
       }
     </style>
   </head>
+  <audio id="bgMusic" loop>
+    <source src="music/i-think-they-call-this-love.mp3" type="audio/mpeg" />
+  </audio>
 
   <body>
-    <!-- Floating hearts & stars -->
-    <span class="floating" style="left: 10%; animation-duration: 12s">💖</span>
-    <span class="floating" style="left: 25%; animation-duration: 15s">✨</span>
-    <span class="floating" style="left: 40%; animation-duration: 10s">💗</span>
-    <span class="floating" style="left: 55%; animation-duration: 18s">⭐</span>
-    <span class="floating" style="left: 70%; animation-duration: 14s">💞</span>
-    <span class="floating" style="left: 85%; animation-duration: 16s">✨</span>
+    <!-- PARTICLES -->
+    <div class="particles behind" id="pb"></div>
+    <div class="particles front" id="pf"></div>
 
-    <!-- PAGE 1 -->
-    <section id="page1">
-      <h1 class="fade-in">Hey Princess 🐱💗</h1>
-      <p class="fade-in">
-        I made something small… but full of love. Just for you.
-      </p>
-      <img class="fade-in" src="images/cat_bouquet.jpg" alt="Cute waving cat" />
-      <a href="#page2" class="btn">Tap to begin →</a>
+    <!-- PAGES -->
+    <section class="active">
+      <h1>
+        Hey Princess
+        <img src="images/baby.jpg" class="tiny-photo" alt="Her smile" />💗
+      </h1>
+
+      <p>I made something small… but full of love. Just for you.</p>
+      <img src="images/cat_bouquet.jpg" />
+      <button class="btn" onclick="next()">Tap to begin</button>
     </section>
 
-    <!-- PAGE 2 -->
-    <section id="page2">
-      <h1 class="fade-in">This Year ✨</h1>
-      <p class="fade-in">
-        This year was special. Not because it was perfect… but because it had
-        <strong>you</strong> in it.
+    <section>
+      <h1>This Year ✨</h1>
+      <p>
+        This year wasn’t perfect… but it was special because it had
+        <strong>you</strong>.
       </p>
-      <img class="fade-in" src="images/cat_sky.jpg" alt="Cat looking at sky" />
-      <a href="#page3" class="btn">Next →</a>
+      <img src="images/cat_sky.jpg" />
+      <button class="btn" onclick="next()">Next</button>
     </section>
 
-    <!-- PAGE 3 -->
-    <section id="page3">
-      <h1 class="fade-in">Little Moments 🐾</h1>
-      <p class="fade-in">
-        Your laugh.<br />
-        Your kindness.<br />
-        The way you make my days softer.
+    <section>
+      <h1>Little Moments 🐾</h1>
+      <p>
+        Your laugh.<br />Your kindness.<br />The way you make my days softer.
       </p>
-      <img
-        class="fade-in"
-        src="images/cat_cute.jpg"
-        alt="Cute cat with hearts"
-      />
-      <a href="#page4" class="btn">Next →</a>
+      <img src="images/cat_cute.jpg" />
+      <button class="btn" onclick="next()">Next</button>
     </section>
 
-    <!-- PAGE 4 -->
-    <section id="page4">
-      <h1 class="fade-in">My Wish 🎆</h1>
-      <p class="fade-in">
-        In the new year, I don’t wish for perfection. I just wish for
+    <section>
+      <h1>My Wish 🎆</h1>
+      <p>
+        I don’t wish for perfection.<br />I just wish for
         <strong>more us</strong>.
       </p>
-      <img class="fade-in" src="images/two_cats.jpg" alt="Two cats together" />
-      <a href="#page5" class="btn">Almost there →</a>
+      <img src="images/two_cats.jpg" />
+      <button class="btn" onclick="next()">Almost there</button>
     </section>
 
-    <!-- PAGE 5 -->
-    <section id="page5">
-      <h1 class="fade-in">Happy New Year ❤️</h1>
-      <p class="fade-in">
-        To my favorite human in the world. Thank you for being you.
-      </p>
-      <img class="fade-in" src="images/cat_2.jpg" alt="Celebrating cat" />
-      <a href="#page1" class="btn">Replay ↺</a>
+    <section>
+      <h1>Happy New Year ❤️</h1>
+      <p>To my favorite human in the world.</p>
+      <img src="images/cat_2.jpg" />
+      <div class="hold-area">
+        <button class="btn hold-btn" id="holdBtn">Hold for a moment 💗</button>
+
+        <div class="reveal-area" id="revealArea">
+          <img src="images/us.jpg" class="us-photo" alt="Us together" />
+          <p class="reveal-text">
+            This is my favorite memory…<br />
+            and I hope it’s just the beginning 💖
+          </p>
+        </div>
+      </div>
     </section>
+
+    <script>
+      /* PAGE NAVIGATION */
+      const pages = document.querySelectorAll('section');
+      let index = 0;
+
+      function next() {
+        pages[index].classList.remove('active');
+        index++;
+        pages[index].classList.add('active');
+      }
+
+      function reveal() {
+        document.getElementById('secret').style.display = 'block';
+      }
+
+      /* PARTICLES */
+      const icons = ['💖', '💗', '✨', '⭐', '💞'];
+      const pb = document.getElementById('pb');
+      const pf = document.getElementById('pf');
+
+      function spawn(container, size) {
+        const p = document.createElement('span');
+        p.className = 'particle';
+        p.innerText = icons[Math.floor(Math.random() * icons.length)];
+        p.style.left = Math.random() * 100 + '%';
+        p.style.fontSize = size + 'px';
+        p.style.animationDuration = 8 + Math.random() * 8 + 's';
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 16000);
+      }
+
+      setInterval(() => spawn(pb, 14), 400);
+      setInterval(() => spawn(pf, 22), 800);
+
+      const holdBtn = document.getElementById('holdBtn');
+      const revealArea = document.getElementById('revealArea');
+
+      let holdTimer;
+
+      function startHold() {
+        holdBtn.innerText = 'Holding… 💞';
+        holdTimer = setTimeout(() => {
+          revealArea.classList.add('show');
+          holdBtn.style.display = 'none';
+        }, 2000); // 2 seconds
+      }
+
+      function cancelHold() {
+        clearTimeout(holdTimer);
+        holdBtn.innerText = 'Hold for a moment 💗';
+      }
+
+      holdBtn.addEventListener('mousedown', startHold);
+      holdBtn.addEventListener('touchstart', startHold);
+
+      holdBtn.addEventListener('mouseup', cancelHold);
+      holdBtn.addEventListener('mouseleave', cancelHold);
+      holdBtn.addEventListener('touchend', cancelHold);
+
+      const bgMusic = document.getElementById('bgMusic');
+      let musicStarted = false;
+
+      function startMusicOnce() {
+        if (!musicStarted) {
+          bgMusic.volume = 0.6; // soft & romantic
+          bgMusic.play().catch(() => {});
+          musicStarted = true;
+        }
+      }
+
+      // Start music on first interaction
+      document.addEventListener('click', startMusicOnce);
+      document.addEventListener('touchstart', startMusicOnce);
+    </script>
   </body>
 </html>
