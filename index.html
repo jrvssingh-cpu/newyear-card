@@ -228,6 +228,59 @@
         justify-content: flex-start;
         padding-top: 40px;
       }
+
+      /* 🎆 Intro overlay */
+      #intro {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle, #ffdde7, #ffc1d9);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      #intro canvas {
+        position: absolute;
+        inset: 0;
+      }
+
+      .intro-text {
+        position: relative;
+        font-size: 2.2rem;
+        color: #ff4f7a;
+        font-weight: bold;
+        z-index: 1;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+      }
+
+      /* fade-out effect */
+      #intro.fade-out {
+        animation: introFade 1s ease forwards;
+      }
+
+      @keyframes introFade {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
     </style>
   </head>
   <audio id="bgMusic" loop>
@@ -235,6 +288,12 @@
   </audio>
 
   <body>
+    <!-- 🎆 Crackers Intro -->
+    <div id="intro">
+      <canvas id="crackers"></canvas>
+      <div class="intro-text">✨ Happy New Year ✨</div>
+    </div>
+
     <!-- PARTICLES -->
     <div class="particles behind" id="pb"></div>
     <div class="particles front" id="pf"></div>
@@ -370,6 +429,61 @@
       // Start music on first interaction
       document.addEventListener('click', startMusicOnce);
       document.addEventListener('touchstart', startMusicOnce);
+
+      /* 🎆 Crackers animation */
+      const canvas = document.getElementById('crackers');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let sparks = [];
+
+      function Spark() {
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.radius = Math.random() * 2 + 1;
+        this.angle = Math.random() * Math.PI * 2;
+        this.speed = Math.random() * 6 + 3;
+        this.life = 60;
+        this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      }
+
+      Spark.prototype.update = function () {
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        this.life--;
+      };
+
+      Spark.prototype.draw = function () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      };
+
+      function explode() {
+        for (let i = 0; i < 80; i++) {
+          sparks.push(new Spark());
+        }
+      }
+
+      function animateCrackers() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        sparks.forEach((s, i) => {
+          s.update();
+          s.draw();
+          if (s.life <= 0) sparks.splice(i, 1);
+        });
+        requestAnimationFrame(animateCrackers);
+      }
+
+      explode();
+      animateCrackers();
+
+      /* remove intro after animation */
+      setTimeout(() => {
+        document.getElementById('intro').classList.add('fade-out');
+      }, 2200);
     </script>
   </body>
 </html>
